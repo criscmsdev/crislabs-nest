@@ -1,0 +1,628 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PageData {
+  count: Float!
+  limit: Float!
+  offset: Float!
+}
+
+type DataSite {
+  name: String!
+  description: String!
+  type: Type!
+  imageSite: ImageSite
+  infoSite: InfoSite!
+  adminSite: [AdminSite!]!
+  dbSite: [DBSite]
+  updateDate: UpdateDate!
+}
+
+type DBSite {
+  uid: String!
+  label: String!
+  slug: String!
+}
+
+type ImageSite {
+  banner: Image
+  logo: Image
+  icon: Image
+}
+
+type Image {
+  uid: String
+  src: String
+  alt: String
+}
+
+type AdminSite {
+  privilege: String!
+  sid: String!
+}
+
+type InfoSite {
+  clientId: String!
+}
+
+type UpdateDate {
+  createdAt: DateTime!
+  lastUpdatedAt: DateTime
+  register: [Register!]
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Register {
+  uid: String
+  change: String
+  updatedAt: DateTime!
+}
+
+type Seo {
+  title: String!
+  href: String!
+  description: String!
+  image: Image
+}
+
+type PetSite {
+  _id: ID!
+  dataSite: DataSite!
+  url: String!
+  pages: [PetPage0]
+  users: [PetUser]
+  products: [PetProduct]
+  adoptions: [PetAdoption]
+}
+
+type ListPetSite {
+  page: PetSiteConnection!
+  pageData: PageData
+}
+
+type PetSiteConnection {
+  edges: [PetSiteEdge!]
+  pageInfo: PetSitePageInfo
+}
+
+type PetSiteEdge {
+  cursor: String
+  node: PetSite
+}
+
+type PetSitePageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type Tags {
+  uid: String!
+  text: String!
+  slug: String!
+}
+
+type Type {
+  label: String!
+  slug: String!
+}
+
+type DataComment {
+  content: String!
+  author: String!
+  updateDate: UpdateDate!
+  likes: [String!]
+}
+
+type PetComment {
+  _id: ID!
+  dataComment: DataComment!
+  siteId: String!
+  parentId: String!
+}
+
+type DataArticle {
+  content: String
+  category: String
+  meta: String
+  tags: [Tags!]
+  author: String!
+  thumbnail: Image
+  seoArticle: Seo!
+  updateDate: UpdateDate!
+  likes: [String!]
+}
+
+type PetArticle {
+  _id: ID!
+  dataArticle: DataArticle!
+  siteId: String!
+  parentId: String!
+  slug: String!
+  comments: [PetComment]
+}
+
+type ListPetArticle {
+  page: PetArticleConnection!
+  pageData: PageData
+}
+
+type PetArticleConnection {
+  edges: [PetArticleEdge!]
+  pageInfo: PetArticlePageInfo
+}
+
+type PetArticleEdge {
+  cursor: String
+  node: PetArticle
+}
+
+type PetArticlePageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type DataPage {
+  type: Type!
+  icon: String
+  seoPage: Seo!
+  section: [ComponentPage!]!
+  updateDate: UpdateDate!
+}
+
+type ComponentPage {
+  uid: String!
+  component: String!
+  html: String!
+}
+
+type PetPage0 {
+  _id: ID!
+  dataPage: DataPage!
+  slug: String!
+  siteId: String!
+  parentId: String!
+  adoptions: [PetAdoption]
+  products: [PetProduct]
+  articles: [PetArticle]
+}
+
+type PetPage1 {
+  _id: ID!
+  dataPage: DataPage!
+  slug: String!
+  siteId: String!
+  parentId: String!
+  products: [PetProduct]
+}
+
+type ListPetPage0 {
+  page: PetPage0Connection!
+  pageData: PageData
+}
+
+type PetPage0Connection {
+  edges: [PetPage0Edge!]
+  pageInfo: PetPage0PageInfo
+}
+
+type PetPage0Edge {
+  cursor: String
+  node: PetPage0
+}
+
+type PetPage0PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type ListPetPage1 {
+  page: PetPage1Connection!
+  pageData: PageData
+}
+
+type PetPage1Connection {
+  edges: [PetPage1Edge!]
+  pageInfo: PetPage1PageInfo
+}
+
+type PetPage1Edge {
+  cursor: String
+  node: PetPage1
+}
+
+type PetPage1PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type DataProduct {
+  type: Type!
+  mark: Mark
+  inStock: Float
+  price: Float
+  discountPrice: Float
+  promotion: Promotion
+  details: String
+  featured: String
+  specs: String
+  tags: [Tags!]!
+  imageProduct: [Image!]
+  seoProduct: Seo!
+  updateDate: UpdateDate!
+  likes: [String!]
+}
+
+type Mark {
+  label: String!
+  slug: String!
+}
+
+type Promotion {
+  label: String!
+  slug: String!
+}
+
+type PetProduct {
+  _id: ID!
+  dataProduct: DataProduct!
+  slug: String!
+  siteId: String!
+  parentId: String!
+  comments: [PetComment]
+}
+
+type PetAdoption {
+  _id: ID!
+  dataProduct: DataProduct!
+  slug: String!
+  siteId: String!
+  parentId: String!
+}
+
+type ListPetAdoption {
+  page: PetAdoptionConnection!
+  pageData: PageData
+}
+
+type PetAdoptionConnection {
+  edges: [PetAdoptionEdge!]
+  pageInfo: PetAdoptionPageInfo
+}
+
+type PetAdoptionEdge {
+  cursor: String
+  node: PetAdoption
+}
+
+type PetAdoptionPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type ListPetProduct {
+  page: PetProductConnection!
+  pageData: PageData
+}
+
+type PetProductConnection {
+  edges: [PetProductEdge!]
+  pageInfo: PetProductPageInfo
+}
+
+type PetProductEdge {
+  cursor: String
+  node: PetProduct
+}
+
+type PetProductPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type PetUser {
+  _id: ID!
+  dataUser: DataUser!
+  email: String!
+  password: String!
+  siteId: String!
+  articles: [PetArticle]
+}
+
+type DataUser {
+  updateDate: UpdateDate!
+  username: String!
+  role: String!
+  image: Image!
+  status: Boolean!
+  oAuth: OAuth!
+}
+
+type OAuth {
+  provider: String!
+}
+
+type Query {
+  petGetSite(id: String!): PetSite!
+  petGetSites: [PetSite!]!
+  petGetSitesWithCursor(args: ConnectionArgs!): ListPetSite!
+  petGetPage0(id: String!): PetPage0!
+  petGetPage0BySlug(slug: String!, siteId: String!): PetPage0!
+  petGetPages0: [PetPage0!]!
+  petGetPages0ByParentId(parentId: String!): [PetPage0!]!
+  petGetPages0WithCursor(args: ConnectionArgs!, parentId: String!): ListPetPage0!
+  petGetPage1(id: String!): PetPage1!
+  petGetPage1BySlug(slug: String!, siteId: String!): PetPage1!
+  petGetPages1: [PetPage1!]!
+  petGetPages1ByParentId(parentId: String!): [PetPage1!]!
+  petGetPages1WithCursor(args: ConnectionArgs!, parentId: String!): ListPetPage1!
+  petGetProduct(id: String!): PetProduct!
+  petGetProductBySlug(slug: String!, siteId: String!): PetProduct!
+  petGetProducts: [PetProduct!]!
+  petGetProductsBySiteId(siteId: String!): [PetProduct!]!
+  petGetArticlesWithCursor(args: ConnectionArgs!, parentId: String!): ListPetArticle!
+  petGetCommentsByParentId(parentId: String!): [PetComment!]!
+  petGetAdoption(id: String!): PetAdoption!
+  petGetAdoptionBySlug(slug: String!, siteId: String!): PetAdoption!
+  petGetAdoptions: [PetAdoption!]!
+  petGetAdoptionsBySiteId(siteId: String!): [PetAdoption!]!
+  petGetAdoptionsWithCursor(args: ConnectionArgs!, parentId: String!): ListPetAdoption!
+  petGetArticle(id: String!): PetArticle!
+  petGetArticleBySlug(siteId: String!, slug: String!): PetArticle!
+  petGetArticles: [PetArticle!]!
+  petGetArticlesByParentId(parentId: String!): [PetArticle!]!
+  petGetUser(id: String!): PetUser!
+  petGetUserByEmail(email: String!, siteId: String!): PetUser!
+  petGetUsers: [PetUser!]!
+}
+
+input ConnectionArgs {
+  """Paginate before opaque cursor"""
+  before: String
+
+  """Paginate after opaque cursor"""
+  after: String
+
+  """Paginate first"""
+  first: Float
+
+  """Paginate last"""
+  last: Float
+}
+
+type Mutation {
+  petCreateSite(input: CreateSite!): PetSite!
+  petUpdateSite(input: UpdateSite!): PetSite!
+  petUpdateDbSite(input: UpdateDB!): PetSite!
+  petUpdateAdminSite(input: UpdateAdminSite!): PetSite!
+  petUpdateImageSite(input: UpdateImage!): PetSite!
+  petDeleteSite(id: String!): String!
+  petDeleteSites(ids: [String!]!): [String!]!
+  petDeleteAllSites: String!
+  petCreatePage0(input: CreatePage!): PetPage0!
+  petUpdatePage0(input: UpdatePage!): PetPage0!
+  petUpdateImagePage0(input: UpdateImage!): PetPage0!
+  petDeletePage0(id: String!): String!
+  petDeletePages0(ids: [String!]!): [String!]!
+  petDeleteAllPages0: String!
+  petCreatePage1(input: CreatePage!): PetPage1!
+  petUpdatePage1(input: UpdatePage!): PetPage1!
+  petUpdateImagePage1(input: UpdateImage!): PetPage1!
+  petDeletePage1(id: String!): String!
+  petDeletePages1(ids: [String!]!): [String!]!
+  petDeleteAllPages1: String!
+  petCreateProduct(input: CreateProduct!): PetProduct!
+  petUpdateProduct(input: UpdateProduct!): PetProduct!
+  petUpdateDetailProduct(input: UpdateDetailProduct!): PetProduct!
+  petUpdateSpecsProduct(input: UpdateSpecsProduct!): PetProduct!
+  petUpdateTagsProduct(input: UpdateTagsProduct!): PetProduct!
+  petUpdateLikesProduct(input: UpdateLikesProduct!): PetProduct!
+  petUpdateDisLikesProduct(input: UpdateLikesProduct!): PetProduct!
+  petUpdateImageProduct(input: UpdateImageProduct!): PetProduct!
+  petCreateComment(input: CreateComment!): PetComment!
+  petUpdateComment(input: UpdateComment!): PetComment!
+  petUpdateLikesComment(input: UpdateLikesComment!): PetComment!
+  petUpdateDisLikesComment(input: UpdateLikesComment!): PetComment!
+  petCreateAdoption(input: CreateProduct!): PetAdoption!
+  petUpdateAdoption(input: UpdateProduct!): PetAdoption!
+  petUpdateDetailAdoption(input: UpdateDetailProduct!): PetAdoption!
+  petUpdateSpecsAdoption(input: UpdateSpecsProduct!): PetAdoption!
+  petUpdateTagsAdoption(input: UpdateTagsProduct!): PetAdoption!
+  petUpdateLikesAdoption(input: UpdateLikesProduct!): PetAdoption!
+  petUpdateDisLikesAdoption(input: UpdateLikesProduct!): PetAdoption!
+  petUpdateAdoptionImage(input: UpdateImageProduct!): PetAdoption!
+  petCreateArticle(input: CreateArticle!): PetArticle!
+  petUpdateArticle(input: UpdateArticle!): PetArticle!
+  petUpdateLikesArticle(input: UpdateLikesArticle!): PetArticle!
+  petUpdateDisLikesArticle(input: UpdateLikesArticle!): PetArticle!
+  petUpdateImageArticle(input: UpdateImage!): PetArticle!
+  petDeleteArticle(id: String!): String!
+  petDeleteArticles(ids: [String!]!): [String!]!
+  petDeleteAllArticles: String!
+  petCreateUser(input: CreateUser!): PetUser!
+}
+
+input CreateSite {
+  name: String!
+  domain: String!
+  description: String!
+  type: String!
+  clientId: String
+  uid: String!
+}
+
+input UpdateSite {
+  name: String!
+  domain: String!
+  description: String!
+  type: String!
+  clientId: String
+  uid: String!
+  id: String!
+}
+
+input UpdateDB {
+  id: String!
+  type: [String!]!
+}
+
+input UpdateAdminSite {
+  id: String!
+  admin: [InputAdmin!]!
+}
+
+input InputAdmin {
+  privilege: String!
+  sid: String!
+}
+
+input UpdateImage {
+  id: String!
+  type: String
+  uid: String!
+  images: InputImage!
+}
+
+input InputImage {
+  uid: String
+  src: String!
+  alt: String!
+}
+
+input CreatePage {
+  title: String!
+  description: String!
+  type: String!
+  parentId: String!
+  siteId: String!
+  uid: String!
+}
+
+input UpdatePage {
+  title: String!
+  description: String!
+  type: String!
+  parentId: String!
+  siteId: String!
+  uid: String!
+  id: String!
+}
+
+input CreateProduct {
+  name: String!
+  description: String!
+  siteId: String!
+  parentId: String!
+  uid: String!
+  type: String!
+}
+
+input UpdateProduct {
+  name: String
+  description: String
+  siteId: String
+  parentId: String
+  uid: String
+  type: String
+  id: String!
+}
+
+input UpdateDetailProduct {
+  id: String!
+  text: String!
+  uid: String!
+}
+
+input UpdateSpecsProduct {
+  id: String!
+  text: String!
+  uid: String!
+}
+
+input UpdateTagsProduct {
+  id: String!
+  tags: [String!]!
+  uid: String!
+}
+
+input UpdateLikesProduct {
+  id: String!
+  uid: String!
+}
+
+input UpdateImageProduct {
+  id: String!
+  type: String
+  uid: String!
+  images: [InputImage!]!
+}
+
+input CreateComment {
+  author: String!
+  content: String!
+  siteId: String!
+  parentId: String!
+  uid: String!
+}
+
+input UpdateComment {
+  author: String
+  content: String
+  siteId: String
+  parentId: String
+  uid: String
+  id: String!
+}
+
+input UpdateLikesComment {
+  id: String!
+  uid: String!
+}
+
+input CreateArticle {
+  title: String!
+  description: String!
+  siteId: String!
+  parentId: String!
+  uid: String!
+}
+
+input UpdateArticle {
+  title: String
+  description: String
+  siteId: String
+  parentId: String
+  uid: String
+  id: String!
+}
+
+input UpdateLikesArticle {
+  id: String!
+  uid: String!
+}
+
+input CreateUser {
+  username: String!
+  siteId: String!
+  image: String!
+  email: String!
+  password: String!
+  role: String!
+  oAuth: String
+}
