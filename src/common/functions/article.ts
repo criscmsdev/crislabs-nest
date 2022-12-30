@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { capitalizar, slug, uuidv3 } from 'utils/function';
-import { CreateArticle, UpdateArticle, UpdateLikesArticle } from '../dto/article.input';
+import { CreateArticle, UpdateArticle, UpdateContentArticle, UpdateLikesArticle, UpdateTagsArticle } from '../dto/article.input';
 import { CreateProduct, UpdateProduct } from '../dto/product.input';
 import { InputImage, UpdateImage, UpdateImageProduct } from '../dto/site.input';
 
@@ -51,6 +51,42 @@ export function articleUpdated({ id, title, description, uid }: UpdateArticle) {
       'dataArticle.updateDate.register': {
         uid: uid,
         change: 'article updated',
+        updatedAt: new Date(),
+      },
+    },
+  };
+}
+
+export function articleContentUpdated({ content, uid }: UpdateContentArticle) {
+  return {
+    $set: {
+      'dataArticle.content': content,
+      'dataArticle.updateDate.lastUpdatedAt': new Date(),
+    },
+    $push: {
+      'dataArticle.updateDate.register': {
+        uid: uid,
+        change: 'article content updated',
+        updatedAt: new Date(),
+      },
+    },
+  };
+}
+
+export function articleTagsUpdated({ tags, uid }: UpdateTagsArticle) {
+  return {
+    $set: {
+      'dataArticle.tags': tags.map((data) => ({
+        uid: uuidv3(),
+        text: data,
+        slug: slug(data),
+      })),
+      'dataArticle.updateDate.lastUpdatedAt': new Date(),
+    },
+    $push: {
+      'dataArticle.updateDate.register': {
+        uid: uid,
+        change: 'article tags updated',
         updatedAt: new Date(),
       },
     },

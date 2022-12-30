@@ -1,14 +1,38 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { connectionFromArraySlice } from 'graphql-relay';
-import { CreateProduct, UpdateDetailProduct, UpdateLikesProduct, UpdateProduct, UpdateSpecsProduct, UpdateTagsProduct } from 'src/common/dto/product.input';
+import { PetCommentService } from 'src/comments/categories/pet/category.service';
+import {
+  CreateProduct,
+  UpdateDetailProduct,
+  UpdateLikesProduct,
+  UpdateProduct,
+  UpdateSpecsProduct,
+  UpdateTagsProduct,
+} from 'src/common/dto/product.input';
 import { UpdateImageProduct } from 'src/common/dto/site.input';
-import { ListPetAdoption, PetAdoption } from 'src/common/entities/product.model';
-import ConnectionArgs, { getPagingParameters } from 'src/common/pagination/relay/connection.args';
+import { PetComment } from 'src/common/entities/comment.model';
+import {
+  ListPetAdoption,
+  PetAdoption,
+} from 'src/common/entities/product.model';
+import ConnectionArgs, {
+  getPagingParameters,
+} from 'src/common/pagination/relay/connection.args';
 import { PetAdoptionService } from './category.service';
 
 @Resolver(() => PetAdoption)
 export class PetAdoptionResolver {
-  constructor(private readonly adoptionService: PetAdoptionService) {}
+  constructor(
+    private readonly adoptionService: PetAdoptionService,
+    private readonly commentService: PetCommentService,
+  ) {}
 
   @Mutation(() => PetAdoption, { name: 'petCreateAdoption' })
   create(@Args('input') input: CreateProduct) {
@@ -42,10 +66,28 @@ export class PetAdoptionResolver {
   }
 
   @Mutation(() => PetAdoption, {
-    name: 'petUpdateAdoptionImage',
+    name: 'petUpdateImageAdoption',
   })
   updateImage(@Args('input') input: UpdateImageProduct) {
     return this.adoptionService.updateImage(input);
+  }
+
+  @Mutation(() => String, { name: 'petDeleteAdoption' })
+  deletePage(@Args('id') id: string) {
+    return this.adoptionService.deleteOne(id);
+  }
+
+  @Mutation(() => [String], { name: 'petDeleteAdoptions' })
+  deletePagesById(
+    @Args('ids', { type: () => [String] }) ids: string[],
+    // @Args('type') type: string,
+  ) {
+    return this.adoptionService.deleteMany(ids);
+  }
+
+  @Mutation(() => String, { name: 'petDeleteAllAdoptions' })
+  deleteAllPages() {
+    return this.adoptionService.deleteAll();
   }
 
   @Query(() => PetAdoption, { name: 'petGetAdoption' })
@@ -67,7 +109,7 @@ export class PetAdoptionResolver {
   findBySiteId(@Args('siteId') siteId: string) {
     return this.adoptionService.findBySiteId(siteId);
   }
-  
+
   @Query(() => ListPetAdoption, { name: 'petGetAdoptionsWithCursor' })
   async findAllWithCursor(
     @Args('args') args: ConnectionArgs,
@@ -87,5 +129,10 @@ export class PetAdoptionResolver {
     });
 
     return { page, pageData: { count, limit, offset } };
+  }
+
+  @ResolveField('comments', () => [PetComment], { nullable: 'itemsAndList' })
+  getComments(@Parent() { _id }: PetAdoption) {
+    return this.commentService.findByParentId(_id.toString());
   }
 }

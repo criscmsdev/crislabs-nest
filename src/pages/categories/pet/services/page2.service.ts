@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePage, UpdatePage } from 'src/common/dto/page.input';
 import { UpdateImage } from 'src/common/dto/site.input';
-import { PetPage1 } from 'src/common/entities/page.model';
+import { PetPage2 } from 'src/common/entities/page.model';
 import { PageDocument } from 'src/common/entities/page.schema';
 
 import {
@@ -15,9 +19,9 @@ import { ListInput } from 'src/common/pagination/dto/list.input';
 import { slug } from 'utils/function';
 
 @Injectable()
-export class PetPage1Service {
+export class PetPage2Service {
   constructor(
-    @InjectModel(PetPage1.name, 'petDB')
+    @InjectModel(PetPage2.name, 'petDB')
     private pageModel: Model<PageDocument>,
   ) {}
 
@@ -75,10 +79,8 @@ export class PetPage1Service {
       { _id: input.id },
       pageUpdateImage(input),
       { lean: true, new: true },
-
     );
     if (!document) throw new NotFoundException('Document not found.');
-
     return document;
   }
 

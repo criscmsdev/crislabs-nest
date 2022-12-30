@@ -120,6 +120,26 @@ export class PetProductService {
     return data;
   }
 
+  async deleteOne(id: string) {
+    await this.productModel.deleteOne({ _id: id });
+    return id;
+  }
+
+  async deleteMany(ids: string[]) {
+    await this.productModel.deleteMany({ _id: { $in: ids } });
+    return ids;
+  }
+
+  async deleteManyBySiteId(ids: string[]) {
+    await this.productModel.deleteMany({ siteId: { $in: ids } });
+    return 'pages delete';
+  }
+
+  async deleteAll() {
+    await this.productModel.deleteMany();
+    return 'pages delete';
+  }
+
   findAll() {
     const data = this.productModel.find({});
     return data;

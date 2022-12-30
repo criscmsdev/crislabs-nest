@@ -85,7 +85,7 @@ export class PetPage0Service {
     await this.pageModel.deleteOne({ _id: id });
     return id;
   }
-
+  
   async deleteMany(ids: string[]) {
     await this.pageModel.deleteMany({ _id: { $in: ids } });
     return ids;

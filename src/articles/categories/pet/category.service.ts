@@ -1,22 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   CreateArticle,
   UpdateArticle,
+  UpdateContentArticle,
   UpdateLikesArticle,
+  UpdateTagsArticle,
 } from 'src/common/dto/article.input';
 import { UpdateImage } from 'src/common/dto/site.input';
 import { PetArticle } from 'src/common/entities/article.model';
 import { ArticleDocument } from 'src/common/entities/article.schema';
 import {
+  articleContentUpdated,
   articleCreated,
   articleDisLikesUpdated,
   articleImageUpdated,
   articleLikesUpdated,
+  articleTagsUpdated,
   articleUpdated,
 } from 'src/common/functions/article';
 import { ListInput } from 'src/common/pagination/dto/list.input';
+import { slug } from 'utils/function';
 
 @Injectable()
 export class PetArticleService {
@@ -26,11 +31,43 @@ export class PetArticleService {
   ) {}
 
   async create(input: CreateArticle) {
+    const article = await this.articleModel.findOne(
+      {
+        slug: slug(input.title),
+        siteId: input.siteId,
+        parentId: input.parentId,
+      },
+      {},
+      { lean: true },
+    );
+
+    if (article) {
+      // this.logger.warn('Document not found with filterQuery', filterQuery);
+      throw new UnprocessableEntityException(
+        `You already have an item registered with that name "${input.title}"`,
+      );
+    }
     const data = new this.articleModel(articleCreated(input));
     return (await data.save()).toJSON();
   }
 
   async update(input: UpdateArticle) {
+    const article = await this.articleModel.findOne(
+      {
+        _id: { $ne: input.id },
+        slug: slug(input.title),
+        siteId: input.siteId,
+        parentId: input.parentId,
+      },
+      {},
+      { lean: true },
+    );
+    if (article) {
+      // this.logger.warn('Document not found with filterQuery', filterQuery);
+      throw new UnprocessableEntityException(
+        `You already have an item registered with that name "${input.title}"`,
+      );
+    }
     const data = await this.articleModel.findOneAndUpdate(
       { _id: input.id },
       articleUpdated(input),
@@ -60,6 +97,23 @@ export class PetArticleService {
     const data = await this.articleModel.findOneAndUpdate(
       { _id: input.id },
       articleImageUpdated(input),
+      { lean: true, new: true },
+    );
+    return data;
+  }
+
+  async updateContent(input: UpdateContentArticle) {
+    const data = await this.articleModel.findOneAndUpdate(
+      { _id: input.id },
+      articleContentUpdated(input),
+      { lean: true, new: true },
+    );
+    return data;
+  }
+  async updateTags(input: UpdateTagsArticle) {
+    const data = await this.articleModel.findOneAndUpdate(
+      { _id: input.id },
+      articleTagsUpdated(input),
       { lean: true, new: true },
     );
     return data;

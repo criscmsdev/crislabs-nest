@@ -1,9 +1,20 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateProduct, UpdateDetailProduct, UpdateLikesProduct, UpdateProduct, UpdateSpecsProduct, UpdateTagsProduct } from 'src/common/dto/product.input';
+import {
+  CreateProduct,
+  UpdateDetailProduct,
+  UpdateLikesProduct,
+  UpdateProduct,
+  UpdateSpecsProduct,
+  UpdateTagsProduct,
+} from 'src/common/dto/product.input';
 import { UpdateImageProduct } from 'src/common/dto/site.input';
-import { PetAdoption, PetProduct } from 'src/common/entities/product.model';
+import { PetAdoption } from 'src/common/entities/product.model';
 import { ProductDocument } from 'src/common/entities/product.schema';
 import {
   productCreated,
@@ -117,6 +128,26 @@ export class PetAdoptionService {
       { lean: true, new: true },
     );
     return data;
+  }
+
+  async deleteOne(id: string) {
+    await this.adoptionModel.deleteOne({ _id: id });
+    return id;
+  }
+
+  async deleteMany(ids: string[]) {
+    await this.adoptionModel.deleteMany({ _id: { $in: ids } });
+    return ids;
+  }
+
+  async deleteManyBySiteId(ids: string[]) {
+    await this.adoptionModel.deleteMany({ siteId: { $in: ids } });
+    return 'pages delete';
+  }
+
+  async deleteAll() {
+    await this.adoptionModel.deleteMany();
+    return 'pages delete';
   }
 
   findAll() {

@@ -4,7 +4,9 @@ import { PetCommentService } from 'src/comments/categories/pet/category.service'
 import {
   CreateArticle,
   UpdateArticle,
+  UpdateContentArticle,
   UpdateLikesArticle,
+  UpdateTagsArticle,
 } from 'src/common/dto/article.input';
 import { UpdateImage } from 'src/common/dto/site.input';
 import { ListPetArticle, PetArticle } from 'src/common/entities/article.model';
@@ -32,7 +34,15 @@ export class PetArticleResolver {
   update(@Args('input') input: UpdateArticle) {
     return this.petService.update(input);
   }
-
+  @Mutation(() => PetArticle, { name: 'petUpdateContentArticle' })
+  updateContent(@Args('input') input: UpdateContentArticle) {
+    return this.petService.updateContent(input);
+  }
+  @Mutation(() => PetArticle, { name: 'petUpdateTagsArticle' })
+  updateTags(@Args('input') input: UpdateTagsArticle) {
+    return this.petService.updateTags(input);
+  }
+  
   @Mutation(() => PetArticle, { name: 'petUpdateLikesArticle' })
   updateLikes(@Args('input') input: UpdateLikesArticle) {
     return this.petService.updateLikes(input);

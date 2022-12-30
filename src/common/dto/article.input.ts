@@ -24,6 +24,15 @@ export class UpdateArticle extends PartialType(CreateArticle) {
   @Field()
   readonly id: string;
 }
+@InputType()
+export class UpdateContentArticle {
+  @Field()
+  readonly id: string;
+  @Field()
+  readonly content: string;
+  @Field()
+  readonly uid: string;
+}
 
 @InputType()
 export class UpdateLikesArticle {
@@ -33,6 +42,15 @@ export class UpdateLikesArticle {
   readonly uid: string;
 }
 
+@InputType()
+export class UpdateTagsArticle {
+  @Field()
+  readonly id: string;
+  @Field(() => [String])
+  readonly tags: string[];
+  @Field()
+  readonly uid: string;
+}
 
 // @InputType()
 // export class UpdateArticle extends PartialType(CreateArticle) {

@@ -61,6 +61,24 @@ export class PetProductResolver {
     return this.productService.updateImage(input);
   }
 
+  @Mutation(() => String, { name: 'petDeleteProduct' })
+  deletePage(@Args('id') id: string) {
+    return this.productService.deleteOne(id);
+  }
+
+  @Mutation(() => [String], { name: 'petDeleteProducts' })
+  deletePagesById(
+    @Args('ids', { type: () => [String] }) ids: string[],
+    // @Args('type') type: string,
+  ) {
+    return this.productService.deleteMany(ids);
+  }
+
+  @Mutation(() => String, { name: 'petDeleteAllProducts' })
+  deleteAllPages() {
+    return this.productService.deleteAll();
+  }
+
   @Query(() => PetProduct, { name: 'petGetProduct' })
   findOne(@Args('id') id: string) {
     return this.productService.findOne(id);
@@ -81,7 +99,7 @@ export class PetProductResolver {
     return this.productService.findBySiteId(siteId);
   }
 
-  @Query(() => ListPetProduct, { name: 'petGetArticlesWithCursor' })
+  @Query(() => ListPetProduct, { name: 'petGetProductsWithCursor' })
   async findAllWithCursor(
     @Args('args') args: ConnectionArgs,
     @Args('parentId') parentId: string,

@@ -78,6 +78,7 @@ type PetSite {
   users: [PetUser]
   products: [PetProduct]
   adoptions: [PetAdoption]
+  articles: [PetArticle]
 }
 
 type ListPetSite {
@@ -191,11 +192,22 @@ type PetPage0 {
   siteId: String!
   parentId: String!
   adoptions: [PetAdoption]
+  pages: [PetPage1]
   products: [PetProduct]
   articles: [PetArticle]
 }
 
 type PetPage1 {
+  _id: ID!
+  dataPage: DataPage!
+  slug: String!
+  siteId: String!
+  parentId: String!
+  products: [PetProduct]
+  pages: [PetPage2]
+}
+
+type PetPage2 {
   _id: ID!
   dataPage: DataPage!
   slug: String!
@@ -248,6 +260,28 @@ type PetPage1PageInfo {
   hasNextPage: Boolean!
 }
 
+type ListPetPage2 {
+  page: PetPage2Connection!
+  pageData: PageData
+}
+
+type PetPage2Connection {
+  edges: [PetPage2Edge!]
+  pageInfo: PetPage2PageInfo
+}
+
+type PetPage2Edge {
+  cursor: String
+  node: PetPage2
+}
+
+type PetPage2PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type DataProduct {
   type: Type!
   mark: Mark
@@ -290,6 +324,7 @@ type PetAdoption {
   slug: String!
   siteId: String!
   parentId: String!
+  comments: [PetComment]
 }
 
 type ListPetAdoption {
@@ -372,11 +407,16 @@ type Query {
   petGetPages1: [PetPage1!]!
   petGetPages1ByParentId(parentId: String!): [PetPage1!]!
   petGetPages1WithCursor(args: ConnectionArgs!, parentId: String!): ListPetPage1!
+  petGetPage2(id: String!): PetPage2!
+  petGetPage2BySlug(slug: String!, siteId: String!): PetPage2!
+  petGetPages2: [PetPage2!]!
+  petGetPages2ByParentId(parentId: String!): [PetPage2!]!
+  petGetPages2WithCursor(args: ConnectionArgs!, parentId: String!): ListPetPage2!
   petGetProduct(id: String!): PetProduct!
   petGetProductBySlug(slug: String!, siteId: String!): PetProduct!
   petGetProducts: [PetProduct!]!
   petGetProductsBySiteId(siteId: String!): [PetProduct!]!
-  petGetArticlesWithCursor(args: ConnectionArgs!, parentId: String!): ListPetArticle!
+  petGetProductsWithCursor(args: ConnectionArgs!, parentId: String!): ListPetProduct!
   petGetCommentsByParentId(parentId: String!): [PetComment!]!
   petGetAdoption(id: String!): PetAdoption!
   petGetAdoptionBySlug(slug: String!, siteId: String!): PetAdoption!
@@ -387,6 +427,7 @@ type Query {
   petGetArticleBySlug(siteId: String!, slug: String!): PetArticle!
   petGetArticles: [PetArticle!]!
   petGetArticlesByParentId(parentId: String!): [PetArticle!]!
+  petGetArticlesWithCursor(args: ConnectionArgs!, parentId: String!): ListPetArticle!
   petGetUser(id: String!): PetUser!
   petGetUserByEmail(email: String!, siteId: String!): PetUser!
   petGetUsers: [PetUser!]!
@@ -427,6 +468,12 @@ type Mutation {
   petDeletePage1(id: String!): String!
   petDeletePages1(ids: [String!]!): [String!]!
   petDeleteAllPages1: String!
+  petCreatePage2(input: CreatePage!): PetPage2!
+  petUpdatePage2(input: UpdatePage!): PetPage2!
+  petUpdateImagePage2(input: UpdateImage!): PetPage2!
+  petDeletePage2(id: String!): String!
+  petDeletePages2(ids: [String!]!): [String!]!
+  petDeleteAllPages2: String!
   petCreateProduct(input: CreateProduct!): PetProduct!
   petUpdateProduct(input: UpdateProduct!): PetProduct!
   petUpdateDetailProduct(input: UpdateDetailProduct!): PetProduct!
@@ -435,6 +482,9 @@ type Mutation {
   petUpdateLikesProduct(input: UpdateLikesProduct!): PetProduct!
   petUpdateDisLikesProduct(input: UpdateLikesProduct!): PetProduct!
   petUpdateImageProduct(input: UpdateImageProduct!): PetProduct!
+  petDeleteProduct(id: String!): String!
+  petDeleteProducts(ids: [String!]!): [String!]!
+  petDeleteAllProducts: String!
   petCreateComment(input: CreateComment!): PetComment!
   petUpdateComment(input: UpdateComment!): PetComment!
   petUpdateLikesComment(input: UpdateLikesComment!): PetComment!
@@ -446,9 +496,14 @@ type Mutation {
   petUpdateTagsAdoption(input: UpdateTagsProduct!): PetAdoption!
   petUpdateLikesAdoption(input: UpdateLikesProduct!): PetAdoption!
   petUpdateDisLikesAdoption(input: UpdateLikesProduct!): PetAdoption!
-  petUpdateAdoptionImage(input: UpdateImageProduct!): PetAdoption!
+  petUpdateImageAdoption(input: UpdateImageProduct!): PetAdoption!
+  petDeleteAdoption(id: String!): String!
+  petDeleteAdoptions(ids: [String!]!): [String!]!
+  petDeleteAllAdoptions: String!
   petCreateArticle(input: CreateArticle!): PetArticle!
   petUpdateArticle(input: UpdateArticle!): PetArticle!
+  petUpdateContentArticle(input: UpdateContentArticle!): PetArticle!
+  petUpdateTagsArticle(input: UpdateTagsArticle!): PetArticle!
   petUpdateLikesArticle(input: UpdateLikesArticle!): PetArticle!
   petUpdateDisLikesArticle(input: UpdateLikesArticle!): PetArticle!
   petUpdateImageArticle(input: UpdateImage!): PetArticle!
@@ -610,6 +665,18 @@ input UpdateArticle {
   parentId: String
   uid: String
   id: String!
+}
+
+input UpdateContentArticle {
+  id: String!
+  content: String!
+  uid: String!
+}
+
+input UpdateTagsArticle {
+  id: String!
+  tags: [String!]!
+  uid: String!
 }
 
 input UpdateLikesArticle {

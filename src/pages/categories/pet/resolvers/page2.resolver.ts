@@ -13,89 +13,86 @@ import ConnectionArgs, {
 import { connectionFromArraySlice } from 'graphql-relay';
 import {
   DataPage,
-  ListPetPage1,
-  PetPage1,
+  ListPetPage2,
   PetPage2,
 } from 'src/common/entities/page.model';
-import { PetPage1Service } from '../services/page1.service';
+import { PetPage2Service } from '../services/page2.service';
 import { CreatePage, UpdatePage } from 'src/common/dto/page.input';
 import { UpdateImage } from 'src/common/dto/site.input';
 import { PetProduct } from 'src/common/entities/product.model';
 import { Type } from 'src/common/entities/site.model';
 import { PetProductService } from 'src/products/categories/pet/pet-product/category.service';
-import { PetPage2Service } from '../services/page2.service';
 
-@Resolver(() => PetPage1)
-export class PetPage1Resolver {
+@Resolver(() => PetPage2)
+export class PetPage2Resolver {
   constructor(
-    private readonly page1Service: PetPage1Service,
     private readonly page2Service: PetPage2Service,
     private readonly productService: PetProductService,
   ) {}
 
-  @Mutation(() => PetPage1, { name: 'petCreatePage1' })
+  @Mutation(() => PetPage2, { name: 'petCreatePage2' })
   createPage(@Args('input') input: CreatePage) {
-    return this.page1Service.create(input);
+    return this.page2Service.create(input);
   }
 
-  @Mutation(() => PetPage1, { name: 'petUpdatePage1' })
+  @Mutation(() => PetPage2, { name: 'petUpdatePage2' })
   updatePage(
     @Args('input') input: UpdatePage,
     // @Args('type') type: string,
   ) {
-    return this.page1Service.update(input);
+    return this.page2Service.update(input);
   }
 
-  @Mutation(() => PetPage1, { name: 'petUpdateImagePage1' })
+  @Mutation(() => PetPage2, { name: 'petUpdateImagePage2' })
   updateImage(@Args('input') input: UpdateImage) {
-    return this.page1Service.updateImage(input);
+    return this.page2Service.updateImage(input);
   }
 
-  @Mutation(() => String, { name: 'petDeletePage1' })
+  @Mutation(() => String, { name: 'petDeletePage2' })
   deletePage(@Args('id') id: string) {
-    return this.page1Service.deleteOne(id);
+    return this.page2Service.deleteOne(id);
   }
 
-  @Mutation(() => [String], { name: 'petDeletePages1' })
+  @Mutation(() => [String], { name: 'petDeletePages2' })
   deletePagesById(@Args('ids', { type: () => [String] }) ids: string[]) {
-    return this.page1Service.deleteMany(ids);
+    return this.page2Service.deleteMany(ids);
   }
 
-  @Mutation(() => String, { name: 'petDeleteAllPages1' })
+  @Mutation(() => String, { name: 'petDeleteAllPages2' })
   deleteAllPages() {
-    return this.page1Service.deleteAll();
+    return this.page2Service.deleteAll();
   }
 
-  @Query(() => PetPage1, { name: 'petGetPage1' })
+  @Query(() => PetPage2, { name: 'petGetPage2' })
   findPage(@Args('id') id: string) {
-    return this.page1Service.findOne(id);
+    return this.page2Service.findOne(id);
   }
 
-  @Query(() => PetPage1, { name: 'petGetPage1BySlug' })
+  @Query(() => PetPage2, { name: 'petGetPage2BySlug' })
   findPageBySlug(@Args('slug') slug: string, @Args('siteId') siteId: string) {
-    return this.page1Service.findOneBySlug(slug, siteId);
+    return this.page2Service.findOneBySlug(slug, siteId);
   }
 
-  @Query(() => [PetPage1], { name: 'petGetPages1' })
+  @Query(() => [PetPage2], { name: 'petGetPages2' })
   findPages() {
-    return this.page1Service.findAll();
+    return this.page2Service.findAll();
   }
 
-  @Query(() => [PetPage1], { name: 'petGetPages1ByParentId' })
+  @Query(() => [PetPage2], { name: 'petGetPages2ByParentId' })
   findPagesByParentId(
     @Args('parentId') parentId: string,
     // @Args('type') type: string,
   ) {
-    return this.page1Service.findByParentId(parentId);
+    return this.page2Service.findByParentId(parentId);
   }
 
-  @Query(() => ListPetPage1, { name: 'petGetPages1WithCursor' })
+  @Query(() => ListPetPage2, { name: 'petGetPages2WithCursor' })
   async findAllWithCursor(
     @Args('args') args: ConnectionArgs,
     @Args('parentId') parentId: string,
-  ): Promise<ListPetPage1> {
+  ): Promise<ListPetPage2> {
     const { limit, offset } = getPagingParameters(args);
-    const { data, count } = await this.page1Service.findByCursor(
+    const { data, count } = await this.page2Service.findByCursor(
       {
         limit,
         offset,
@@ -111,7 +108,7 @@ export class PetPage1Resolver {
   }
 
   @ResolveField('products', () => [PetProduct], { nullable: 'itemsAndList' })
-  getProduct(@Parent() { _id, dataPage }: PetPage1) {
+  getProduct(@Parent() { _id, dataPage }: PetPage2) {
     const { type } = dataPage as DataPage;
     const { slug } = type as Type;
     if (slug === 'pet') {
@@ -119,15 +116,5 @@ export class PetPage1Resolver {
     } else {
       return null;
     }
-  }
-  @ResolveField('pages', () => [PetPage2], { nullable: 'itemsAndList' })
-  getPages(@Parent() { _id, dataPage }: PetPage1) {
-    // const { type } = dataPage as DataPage;
-    // const { slug } = type as Type;
-    return this.page2Service.findByParentId(_id.toString());
-    // if (slug === 'category') {
-    // } else {
-    //   return null;
-    // }
   }
 }

@@ -27,6 +27,8 @@ import { PetUser } from 'src/common/entities/user.model';
 import { PetProductService } from 'src/products/categories/pet/pet-product/category.service';
 import { PetAdoptionService } from 'src/products/categories/pet/pet-adoption/category.service';
 import { PetAdoption, PetProduct } from 'src/common/entities/product.model';
+import { PetArticleService } from 'src/articles/categories/pet/category.service';
+import { PetArticle } from 'src/common/entities/article.model';
 
 @Resolver(() => PetSite)
 export class PetSiteResolver {
@@ -36,6 +38,7 @@ export class PetSiteResolver {
     private readonly userService: PetUserService,
     private readonly productService: PetProductService,
     private readonly adoptionService: PetAdoptionService,
+    private readonly articleService: PetArticleService,
   ) {}
 
   @Mutation(() => PetSite, { name: 'petCreateSite' })
@@ -127,5 +130,9 @@ export class PetSiteResolver {
   @ResolveField('adoptions', () => [PetAdoption], { nullable: 'itemsAndList' })
   getAdoptions(@Parent() { _id }: PetSite) {
     return this.adoptionService.findBySiteId(_id.toString());
+  }
+  @ResolveField('articles', () => [PetArticle], { nullable: 'itemsAndList' })
+  getArticles(@Parent() { _id }: PetSite) {
+    return this.articleService.findBySiteId(_id.toString());
   }
 }

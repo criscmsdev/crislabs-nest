@@ -313,3 +313,5 @@ export class EnginePage12 extends Page {}
 export class ListPetPage0 extends RelayTypes<PetPage0>(PetPage0) {}
 @ObjectType()
 export class ListPetPage1 extends RelayTypes<PetPage1>(PetPage1) {}
+@ObjectType()
+export class ListPetPage2 extends RelayTypes<PetPage2>(PetPage2) {}

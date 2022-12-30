@@ -15,6 +15,7 @@ import {
   DataPage,
   ListPetPage0,
   PetPage0,
+  PetPage1,
 } from 'src/common/entities/page.model';
 import { PetPage0Service } from '../services/page0.service';
 import { CreatePage, UpdatePage } from 'src/common/dto/page.input';
@@ -25,11 +26,13 @@ import { PetAdoptionService } from 'src/products/categories/pet/pet-adoption/cat
 import { PetProductService } from 'src/products/categories/pet/pet-product/category.service';
 import { PetArticleService } from 'src/articles/categories/pet/category.service';
 import { PetArticle } from 'src/common/entities/article.model';
+import { PetPage1Service } from '../services/page1.service';
 
 @Resolver(() => PetPage0)
 export class PetPage0Resolver {
   constructor(
     private readonly page0Service: PetPage0Service,
+    private readonly page1Service: PetPage1Service,
     private readonly adoptionService: PetAdoptionService,
     private readonly productService: PetProductService,
     private readonly articleService: PetArticleService,
@@ -124,6 +127,16 @@ export class PetPage0Resolver {
     } else {
       return null;
     }
+  }
+  @ResolveField('pages', () => [PetPage1], { nullable: 'itemsAndList' })
+  getPages(@Parent() { _id, dataPage }: PetPage0) {
+    // const { type } = dataPage as DataPage;
+    // const { slug } = type as Type;
+    return this.page1Service.findByParentId(_id.toString());
+    // if (slug === 'category') {
+    // } else {
+    //   return null;
+    // }
   }
   @ResolveField('products', () => [PetProduct], { nullable: 'itemsAndList' })
   getProduct(@Parent() { _id, dataPage }: PetPage0) {
